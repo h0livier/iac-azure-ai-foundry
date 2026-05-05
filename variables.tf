@@ -1,44 +1,17 @@
 variable "data" {
   description = "Naming data for the resource"
   type = object({
-    client  = optional(string, "null")
-    project = string
-    type    = string
+    resource_group_name = string
+    foundry_name        = string
+    project_name        = string
+    subdomain_name      = optional(string, null)
   })
-}
-
-variable "role" {
-  description = "The role of the resource"
-  type        = string
-  default     = null
 }
 
 variable "location" {
   description = "The Azure region where resources will be created"
   type        = string
   default     = "west-europe"
-}
-
-variable "environment" {
-  description = "The environment of the project (e.g., d, s, t, p)"
-  type        = string
-
-  validation {
-    condition     = contains(["d", "s", "t", "p"], var.environment)
-    error_message = "Environment must be one of: d, s, t, p"
-  }
-}
-
-variable "subdomain_name" {
-  description = "The Subdomain name for the AI Foundry resource"
-  type        = string
-  default     = null
-}
-
-variable "resource_group_name" {
-  description = "The name of the resource group for the AI Foundry resource"
-  type        = string
-  default     = null
 }
 
 variable "foundry_params" {
