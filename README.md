@@ -24,15 +24,13 @@ module "ai_foundry" {
   source = "git@github.com:<org>/iac-azure-ai-foundry.git?ref=main"
 
   data = {
-    project = "myproject"
-    type    = "foundry"
+    resource_group_name = "rg-myproject"
+    foundry_name        = "myfoundry"
+    project_name        = "myproject"
+    subdomain_name      = "my-foundry-subdomain"
   }
 
-  environment = "d"
-  location    = "west-europe"
-
-  subdomain_name      = "my-foundry-subdomain"
-  resource_group_name = "rg-myproject"
+  location = "west-europe"
 
   foundry_params = {
     sku  = "F0"
@@ -60,34 +58,25 @@ module "ai_foundry" {
 
 | Name | Description | Type | Default | Required |
 |---|---|---|---|---|
-| `data` | Naming data for the resource (`client`, `project`, `type`) | `object` | — | yes |
-| `role` | Role suffix appended to the resource name | `string` | `null` | no |
-| `environment` | Environment tag — one of `d`, `s`, `t`, `p` | `string` | — | yes |
+| `data.resource_group_name` | Name of the target resource group | `string` | — | yes |
+| `data.foundry_name` | Suffix used to name the AI Foundry account (`aifoundry<foundry_name>`) | `string` | — | yes |
+| `data.project_name` | Name of the Foundry project | `string` | — | yes |
+| `data.subdomain_name` | Custom subdomain for the AI Foundry endpoint | `string` | `null` | no |
 | `location` | Azure region | `string` | `"west-europe"` | no |
-| `subdomain_name` | Custom subdomain for the AI Foundry endpoint | `string` | `null` | no |
-| `resource_group_name` | Target resource group name | `string` | `null` | no |
-| `foundry_params` | SKU and tags for the cognitive account | `object` | `{ sku = "F0", tags = {} }` | no |
+| `foundry_params` | SKU and tags for the cognitive account | `object({ sku = string, tags = map(string) })` | `{ sku = "F0", tags = {} }` | no |
 | `deployments` | Map of model deployments (SKU + model definition) | `map(object)` | `{ "gpt-4o" = ... }` | no |
-
-## Locals
-
-| Name | Description |
-|---|---|
-| `resource_group_name` | Uses `var.resource_group_name` if provided, otherwise falls back to the naming module default |
-| `subdomain_name` | Uses `var.subdomain_name` if provided, otherwise defaults to `aifoundry<naming>` |
 
 ## Example — `dev.tfvars`
 
 ```hcl
 data = {
-  project = "project"
-  type    = "foundry"
+  resource_group_name = "rg-myproject"
+  foundry_name        = "myproject"
+  project_name        = "myproject"
+  subdomain_name      = "my-foundry-subdomain"
 }
 
-location    = "west-europe"
-environment = "d"
-
-subdomain_name = "my-foundry-subdomain"
+location = "west-europe"
 
 deployments = {
   "gpt-4o" = {
